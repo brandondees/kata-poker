@@ -1,6 +1,6 @@
 #! /usr/bin/env ruby
-
-puts "let's play some poker"
+require 'simplecov'
+SimpleCov.start
 
 class Card
   attr_reader :rank, :suit
