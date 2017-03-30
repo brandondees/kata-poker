@@ -41,27 +41,32 @@ class DeckTest < Minitest::Test
     refute deck.cards == reference_deck.cards
   end
 
-  def test_can_never_have_more_than_fifty_two_cards
-    skip
-  end
-
-  def test_can_never_have_less_than_fifty_two_cards
-    skip
+  def test_always_has_52_cards
+    deck = Deck.new
+    assert_equal 52, deck.cards.count
   end
 
   def test_can_not_have_duplicate_cards
-    skip
-    reference_deck = Deck.new.sort
+    # Derived from Avdi's original "audit_game" validation
+    reference_deck = Deck.new
     played_deck = Deck.new.shuffle
-    stacks = []
-    5.times { stacks << played_deck.deal(5) }
-    game_deck = stacks.reduce(:+).sort
+    [:p1, :p2, :p3, :p4].each do |player|
+      played_deck.deal(player, 5)
+    end
 
-    assert reference_deck.cards == game_deck.cards
+    assert reference_deck.sort == played_deck.sort
   end
 
   def test_cannot_deal_more_cards_than_deck_has
-    skip
+    deck = Deck.new
+    deck.deal(:p1, 30)
+    assert_raises(ArgumentError) { deck.deal(:p2, 30) }
+  end
+
+  def test_deck_count_returns_count_left_in_deck
+    deck = Deck.new
+    deck.deal(:p1, 30)
+    assert_equal 22, deck.deck_count
   end
 
   def test_show_hand_returns_a_players_hand
